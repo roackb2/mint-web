@@ -2,9 +2,12 @@ import React from 'react';
 import './button.scss';
 
 const Button = (props) => {
-  const { title } = props;
+  const { title, onClick } = props;
   return (
-    <div className="button">
+    <div
+      className="button"
+      onClick={onClick}
+    >
       { title }
     </div>
   )

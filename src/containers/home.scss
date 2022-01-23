@@ -2,4 +2,27 @@
   @include col;
   align-items: center;
   justify-content: center;
+
+  .message {
+    font-size: 0.75rem;
+    color: #a04c4c;
+    margin-top: 0.625rem;
+  }
+
+  .section {
+    margin-top: 1.25rem;
+  }
+
+  .sentence {
+    margin-top: 0.625rem;
+  }
+  
+  .loading {
+    font-size: 1rem;
+    color: white;
+  }
+
+  a {
+    color: white;
+  }
 }
