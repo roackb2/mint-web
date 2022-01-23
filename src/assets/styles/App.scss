@@ -1,0 +1,27 @@
+html, body {
+  height: 100%;
+  color: #fff;
+}
+
+@mixin row {
+  display: flex;
+  flex-direction: row;
+}
+
+@mixin col {
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  @include row;
+  height: 100%;
+}
+
+.App {
+  @include col;
+  text-align: center;
+  background-color: #1e0b42;
+  padding: 1.25rem;
+  flex: 1;
+}
