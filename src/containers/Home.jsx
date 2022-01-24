@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Button from '@/components/button/Button';
 import MyEpicNFT from '@/lib/MyEpicNFT';
+import { EpicNftAddr } from '@/lib/constants';
 import './home.scss';
 
 const Home = () => {
@@ -11,11 +12,22 @@ const Home = () => {
   const [currentAccount, setCurrentAccount] = useState('')
   const [mintHash, setMintHash] = useState('')
   const [message, setMessage] = useState('')
+  const [mintedTokenId, setMintedTokenId] = useState('')
+
+  const itemMintedCallback = (from, tokenId) => {
+    setMintedTokenId(tokenId)
+  }
 
   useEffect(() => {
+    let c = null
     if (window.ethereum) {
       setMetaMaskExists(true)
-      setContract(new MyEpicNFT())
+      c = new MyEpicNFT()
+      setContract(c)
+      c.subscribeItemMinted(itemMintedCallback)
+    }
+    return () => {
+      c.unsubscribeItemMinted(itemMintedCallback)
     }
   }, [])
 
@@ -40,7 +52,6 @@ const Home = () => {
     try {
       const res = await contract.mintWords(setLoading)
       setMintHash(res.hash)
-      console.log(res)
     } catch (err) {
       console.warn(err)
     }
@@ -83,10 +94,10 @@ const Home = () => {
             </div>
             <div className="sentence">
             { "Or view it on " }
-              <a href={`https://testnets.opensea.io/${currentAccount}`} target="_blank" rel="noreferrer">
+              <a href={`https://testnets.opensea.io/assets/${EpicNftAddr}/${mintedTokenId}`} target="_blank" rel="noreferrer">
                 OpenSea (testnets)
               </a>
-              { " to sea your collections!" }
+              { " to see the minted asset!" }
             </div>
           </div>
         ) : null }

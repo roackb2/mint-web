@@ -8,6 +8,7 @@ export default class MyEpicNFT {
   constructor () {
     this.getProvider()
     this.getSigner()
+    this.itemMintedCallbacks = [];
   }
 
   getProvider () {
@@ -27,9 +28,22 @@ export default class MyEpicNFT {
     return this.signer
   }
 
+  subscribeItemMinted(cb) {
+    this.itemMintedCallbacks.push(cb)
+  }
+
+  unsubscribeItemMinted(cb) {
+    this.itemMintedCallbacks = this.itemMintedCallbacks.filter(i => i !== cb)
+  }
+
+  _itemMinted (from, tokenId) {
+    this.itemMintedCallbacks.forEach(cb => cb(from, tokenId))
+  }
+
   getContract () {
     if (!this.contract) {
       this.contract = new ethers.Contract(EpicNftAddr, EpicNftAbi, this.getSigner())
+      this.contract.on("NewEpicNFTMinted", this._itemMinted.bind(this))
     }
     return this.contract
   }
@@ -46,9 +60,9 @@ export default class MyEpicNFT {
     setLoading(true)
     const contract = this.getContract()
     let txn = await contract.mintWords()
-    console.log('start minting')
+    console.info('start minting')
     await txn.wait()
-    console.log(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${txn.hash}`);
+    console.info(`Mined, see transaction: https://rinkeby.etherscan.io/tx/${txn.hash}`);
     setLoading(false)
     return txn
   }
