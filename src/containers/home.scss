@@ -3,14 +3,17 @@
   align-items: center;
   justify-content: center;
 
-  .message {
-    font-size: 0.75rem;
-    color: #a04c4c;
+  .error-message {
+    font-size: 1rem;
+    color: #bb3b3b;
     margin-top: 0.625rem;
   }
 
   .section {
+    @include col;
     margin-top: 1.25rem;
+    align-items: center;
+    justify-content: center;
   }
 
   .sentence {

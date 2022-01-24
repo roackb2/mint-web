@@ -3,3 +3,4 @@ export const EpicNftAbi = [
   'function mintWords() public',
   'event NewEpicNFTMinted (address sender, uint256 tokenId)'
 ]
+export const RinkebyChainId = "0x4";

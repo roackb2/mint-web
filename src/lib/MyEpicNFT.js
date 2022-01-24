@@ -16,7 +16,9 @@ export default class MyEpicNFT {
       throw new Error("Ethereum object not exists")
     }
     if (!this.provider) {
-      this.provider = new ethers.providers.Web3Provider(window.ethereum)
+      const { ethereum } = window
+      this._eth = ethereum
+      this.provider = new ethers.providers.Web3Provider(ethereum)
     }
     return this.provider
   }
@@ -26,6 +28,11 @@ export default class MyEpicNFT {
       this.signer = this.provider.getSigner()
     }
     return this.signer
+  }
+
+  async getChainId () {
+    let chainId = await this._eth.request({ method: 'eth_chainId' })
+    return chainId
   }
 
   subscribeItemMinted(cb) {

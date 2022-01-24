@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Button from '@/components/button/Button';
 import MyEpicNFT from '@/lib/MyEpicNFT';
-import { EpicNftAddr } from '@/lib/constants';
+import { EpicNftAddr, RinkebyChainId } from '@/lib/constants';
 import './home.scss';
 
 const Home = () => {
@@ -11,7 +11,7 @@ const Home = () => {
   const [contract, setContract] = useState(null)
   const [currentAccount, setCurrentAccount] = useState('')
   const [mintHash, setMintHash] = useState('')
-  const [message, setMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [mintedTokenId, setMintedTokenId] = useState('')
 
   const itemMintedCallback = (from, tokenId) => {
@@ -33,6 +33,12 @@ const Home = () => {
 
   const handleConnectClick = async () => {
     try {
+      let chainId = await contract.getChainId()
+      if (chainId !== RinkebyChainId) {
+        setErrorMessage("You're not on the Rinkeby Testnet!")
+        return
+      }
+      setErrorMessage('')
       await contract.connectWallet()
       setWalletConnected(true)
       const accounts = await contract.listAccounts()
@@ -43,7 +49,7 @@ const Home = () => {
     } catch (err) {
       console.warn(err)
       if (err.code === 4001) {
-        setMessage('You canceled the connection')
+        setErrorMessage('You canceled the connection')
       }
     }
   }
@@ -79,8 +85,8 @@ const Home = () => {
             />
           )
         }
-        <div className="message">
-        { message }
+        <div className="error-message">
+        { errorMessage }
         </div>
       </div>
       <div className="section">
